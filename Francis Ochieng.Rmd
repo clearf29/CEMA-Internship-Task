@@ -1,0 +1,61 @@
+ ---
+title: "CEMA Internship Task"
+author: "Francis Ochieng"
+date: "2023-07-21"
+output: html_document
+---
+
+Importing data into R 
+```{r}
+library(readr)
+cema_internship_task_2023 <- read_csv("cema_internship_task_2023.csv")
+
+```
+ 
+Descriptive Statistics
+```{r}
+summary(cema_internship_task_2023)
+
+```
+
+Correlation Analysis 
+```{r}
+library(dplyr)
+cema_df <- select(cema_internship_task_2023,3:11)
+cema_df           # display the new data frame containing the double 
+
+cor(cema_df)        #correlation matrix of cema_df      
+
+install.packages("ggcorrplot")
+library("ggcorrplot")
+plots<- ggcorrplot(cor(cema_df))
+plots
+
+```
+
+Data visualization
+```{r}
+library(ggplot2)
+library(tidyr)
+
+cema_long <- cema_df %>% pivot_long(colnames(cema_df)) %>% as.data.frame()                                   #apply pivot longer function
+head(cema_long)
+
+ggp <- ggplot(cema_long, aes(x = values))+
+  geom_histogram(aes(y= ..density..))+
+  geom_density(col ="#1b98e0",size = 2)+
+  facet_wrap(~name,scales = "free")
+
+```
+Research Question:
+What is the effect of Acute malnutrition on the Diarrhea cases?
+
+The statistical test used to examine this is the simple linear regression model
+
+```{r}
+model <- lm(formula = cema_df$`diarrhoea cases`~ cema_df$`Acute Malnutrition`, data = cema_df)
+summary(model)
+```
+
+
+
